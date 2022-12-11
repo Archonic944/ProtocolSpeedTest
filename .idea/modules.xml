@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/ProtocolTestClient/ProtocolTestClient.iml" filepath="$PROJECT_DIR$/ProtocolTestClient/ProtocolTestClient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ProtocolTestServer.iml" filepath="$PROJECT_DIR$/ProtocolTestServer.iml" />
+    </modules>
+  </component>
+</project>

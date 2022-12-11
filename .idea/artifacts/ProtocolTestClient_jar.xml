@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="ProtocolTestClient:jar">
+    <output-path>$USER_HOME$/Desktop/Science Fair</output-path>
+    <root id="archive" name="ProtocolTestClient.jar">
+      <element id="module-output" name="ProtocolTestClient" />
+    </root>
+  </artifact>
+</component>
