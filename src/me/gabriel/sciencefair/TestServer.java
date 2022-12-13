@@ -32,11 +32,11 @@ public class TestServer {
         socket.connect(address, port);
         socket.receive(new DatagramPacket(new byte[1], 1)); //client "accept" signal
         int[] runs = new int[1]; //basically atomic
-        Thread sender = new Thread(){
+        Thread sender = new Thread(){ //sends packets in a forever loop, and only stops when the other thread receives the "end" signal (just means the client has received 10000)
             public void run(){
                 while(isAlive()){
                     try {
-                        Thread.sleep(0, 12); //WHY DOES THIS SLOW TRANSMISSION TIME DOWN BY 10x?! If I don't include it though, I get a packet loss of like 3k+...
+                        Thread.sleep(0, 12); //WHY DOES THIS SLOW TRANSMISSION TIME DOWN BY 100x?! If I don't include it though, I get a packet loss of like 3k+...
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
