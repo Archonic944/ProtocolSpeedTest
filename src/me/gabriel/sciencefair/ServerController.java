@@ -8,13 +8,13 @@ public class ServerController {
         System.out.println("--------[STARTING TCP]-------");
         int[] tcpTimes = new int[TRIALS];
         for(int i = 0; i<tcpTimes.length; i++){
-            tcpTimes[i] = TestServer.startTCP("localhost", 12344);
+            tcpTimes[i] = TestServer.startTCP();
             System.out.println("Trial no. " + (i + 1) + ": " + tcpTimes[i] + "ms");
         }
         System.out.println(">>>>>>>[STARTING UDP]>>>>>>>");
         int[] udpTimes = new int[TRIALS];
         for(int i = 0; i<udpTimes.length; i++){
-            tcpTimes[i] = TestServer.startUDP("localhost", 12344);
+            udpTimes[i] = TestServer.startUDP("localhost", 12344);
             System.out.println("Trial no. " + (i + 1) + ": " + udpTimes[i] + "ms");
         }
         System.out.println("-+-+-+-+-+[TEST FINISHED]+-+-+-+-+-");
