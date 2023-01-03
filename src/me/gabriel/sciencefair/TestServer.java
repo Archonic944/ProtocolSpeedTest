@@ -6,15 +6,12 @@ import java.io.IOException;
 import java.net.*;
 
 public class TestServer {
+    static final int BYTE_LENGTH = 1000;
     static final int PACKET_AMOUNT = 10000;
-    static final int BYTE_LENGTH = 100;
-    static final String MY_IP = "localhost";
+    static final String MY_IP = "192.168.1.146";
     static final int MY_PORT = 12345;
 
-    public static int startTCP() throws IOException {
-        ServerSocket socket = new ServerSocket();
-        socket.bind(new InetSocketAddress(MY_IP, MY_PORT));
-        Socket client = socket.accept();
+    public static int startTCP(Socket client) throws IOException {
         DataOutputStream output = new DataOutputStream(client.getOutputStream());
         DataInputStream input = new DataInputStream(client.getInputStream());
         for(int i = 0; i<PACKET_AMOUNT; i++){
@@ -22,11 +19,15 @@ public class TestServer {
         }
         byte[] ms = new byte[2]; //client "finished" and time
         input.readFully(ms);
-        socket.close();
+        client.close();
         return fromBytes(ms);
     }
 
-    public static int startUDP(String ip, int port) throws IOException {
+    /**
+     * @deprecated Now using {@code beginUDPFirehose} instead.
+     */
+    @Deprecated
+    public static int startUDP(String ip, int port) throws IOException, InterruptedException {
         InetAddress address = InetAddress.getByName(ip);
         DatagramSocket socket = new DatagramSocket(new InetSocketAddress(MY_IP, MY_PORT));
         socket.connect(address, port);
@@ -35,11 +36,13 @@ public class TestServer {
         Thread sender = new Thread(){ //sends packets in a forever loop, and only stops when the other thread receives the "end" signal (just means the client has received 10000)
             public void run(){
                 while(isAlive()){
-                    try {
-                        Thread.sleep(0, 12); //WHY DOES THIS SLOW TRANSMISSION TIME DOWN BY 100x?! If I don't include it though, I get a packet loss of like 3k+...
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
+//                    if(runs[0] % 400 == 0){
+//                        try {
+//                            Thread.sleep(1);
+//                        } catch (InterruptedException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                    }
                     try {
                         socket.send(new DatagramPacket(new byte[BYTE_LENGTH], BYTE_LENGTH));
                     } catch (IOException e) {
@@ -57,6 +60,19 @@ public class TestServer {
         socket.close();
         System.out.println("Times the sender ran: " + runs[0]); //indicates packet loss
         return fromBytes(ms);
+    }
+
+    /**
+     * This method runs until manually stopped.
+     */
+    public static void beginUDPFirehose(String ip, int port) throws IOException {
+        DatagramSocket socket = new DatagramSocket(MY_PORT, InetAddress.getByName(MY_IP));
+        while(true){
+            try {
+                socket.send(new DatagramPacket(new byte[BYTE_LENGTH], BYTE_LENGTH, InetAddress.getByName(ip), port));
+            }catch(Exception ignored){
+            }
+        }
     }
 
     static short fromBytes(byte[] bytes){
